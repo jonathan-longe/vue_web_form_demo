@@ -24,7 +24,7 @@
   </form-card>
 </template>
 <script>
-  import CardsCommon from "@/components/forms/CardsCommon";
+  import CardsCommon from "@/mixins/CardsCommon";
   import CheckDigit from "@/components/forms/CheckDigit";
   import { mapGetters } from 'vuex'
   export default {

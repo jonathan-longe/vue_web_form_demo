@@ -19,7 +19,7 @@
 
 <script>
 
-import CardsCommon from "@/components/forms/CardsCommon";
+import CardsCommon from "@/mixins/CardsCommon";
 import VehicleTowedCard from "@/components/forms/TwelveHourSuspension/VehicleTowedCard";
 import VehicleNotTowedCard from "@/components/forms/TwelveHourSuspension/VehicleNotTowedCard";
 import { mapGetters } from 'vuex';

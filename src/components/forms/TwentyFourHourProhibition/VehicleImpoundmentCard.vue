@@ -19,7 +19,7 @@
 
 <script>
 
-import CardsCommon from "@/components/forms/CardsCommon";
+import CardsCommon from "@/mixins/CardsCommon";
 import VehicleNotImpounded from "@/components/forms/TwentyFourHourProhibition/VehicleNotImpounded";
 import VehicleImpounded from "@/components/forms/TwentyFourHourProhibition/VehicleImpounded";
 

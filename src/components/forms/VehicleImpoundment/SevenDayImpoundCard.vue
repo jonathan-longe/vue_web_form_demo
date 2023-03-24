@@ -53,7 +53,7 @@
   </form-card>
 </template>
 <script>
-  import CardsCommon from "@/components/forms/CardsCommon";
+  import CardsCommon from "@/mixins/CardsCommon";
   import InLineCheckBox from "@/components/questions/InLineCheckBox";
   export default {
     name: "SevenDayImpoundCard",

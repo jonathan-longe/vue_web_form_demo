@@ -23,7 +23,7 @@
 
 <script>
 
-import CardsCommon from "@/components/forms/CardsCommon";
+import CardsCommon from "@/mixins/CardsCommon";
 
 export default {
   name: "VehicleInformationCard",

@@ -11,10 +11,6 @@ import VueMask from 'v-mask'
 import "@/config/custom_stylesheet.scss";
 import {rsiStore} from "@/store/store.js"
 
-import './registerServiceWorker'
-// import constants from "@/config/constants";
-
-
 Vue.use(Vuex)
 
 // Make BootstrapVue components throughout your project

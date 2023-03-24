@@ -45,7 +45,7 @@
   </div>
 </template>
 <script>
-  import CardsCommon from "@/components/forms/CardsCommon";
+  import CardsCommon from "@/mixins/CardsCommon";
   import { mapActions } from "vuex";
   export default {
     name: "VehicleOwnerCard",

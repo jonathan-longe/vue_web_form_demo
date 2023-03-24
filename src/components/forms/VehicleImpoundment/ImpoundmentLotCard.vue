@@ -7,7 +7,7 @@
   </form-card>
 </template>
 <script>
-  import CardsCommon from "@/components/forms/CardsCommon";
+  import CardsCommon from "@/mixins/CardsCommon";
   import ImpoundLotOperator from "@/components/questions/ImpoundLotOperator";
   export default {
   name: "ImpoundmentLotCard",

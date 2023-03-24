@@ -17,7 +17,7 @@
   </form-card>
 </template>
 <script>
-  import CardsCommon from "@/components/forms/CardsCommon";
+  import CardsCommon from "@/mixins/CardsCommon";
   import DriverLicenceClass from "@/components/questions/DriverLicenceClass";
   import { mapGetters } from "vuex";
   export default {
