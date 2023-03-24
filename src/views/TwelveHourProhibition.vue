@@ -9,13 +9,13 @@
         <officer-details-card :path="getPath"></officer-details-card>
         <form-card title="Generate PDF for Printing">
           <div class="d-flex justify-content-between">
-<!--            <print-documents-->
-<!--              v-for="(document, index) in getDocumentsToPrint(name)" v-bind:key="index"-->
-<!--              :form_object="getCurrentlyEditedForm"-->
-<!--              :validate="validate"-->
-<!--              :variants="document.variants">-->
-<!--              {{ document.name }}-->
-<!--            </print-documents>-->
+            <print-documents
+              v-for="(document, index) in getDocumentsToPrint(name)" v-bind:key="index"
+              :form_object="getCurrentlyEditedForm"
+              :validate="validate"
+              :variants="document.variants">
+              {{ document.name }}
+            </print-documents>
           </div>
         </form-card>
       </form>
@@ -29,7 +29,7 @@ import FormsCommon from "@/mixins/FormsCommon";
 import DriversInformationCard from "@/components/forms/TwelveHourSuspension/DriversInformationCard";
 import OfficerDetailsCard from "@/components/forms/OfficerDetailsCard";
 import VehicleInformationCard from "@/components/forms/TwelveHourSuspension/VehicleInformationCard";
-// import PrintDocuments from "../components/forms/PrintDocuments.vue";
+import PrintDocuments from "../components/forms/PrintDocuments.vue";
 import ProhibitionInformationCard from "@/components/forms/TwelveHourSuspension/ProhibitionInformationCard";
 import VehicleImpoundmentCard from "@/components/forms/TwelveHourSuspension/VehicleImpoundmentCard";
 import {mapGetters} from "vuex";
@@ -38,6 +38,7 @@ export default {
   name: "TwelveTwentyFour",
   mixins: [FormsCommon],
   components: {
+    PrintDocuments,
     ProhibitionInformationCard,
     DriversInformationCard,
     OfficerDetailsCard,

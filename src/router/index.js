@@ -7,7 +7,6 @@ import TwentyFourHourProhibition from "@/views/TwentyFourHourProhibition";
 import TwelveHourProhibition from "@/views/TwelveHourProhibition";
 import ImmediateRoadsideProhibition from "@/views/ImmediateRoadsideProhibition";
 import VehicleImpoundment from "@/views/VehicleImpoundment";
-import SVGPrint from "@/views/SvgPrint";
 import NotFound from "@/views/NotFound";
 
 Vue.use(Router)
@@ -38,33 +37,27 @@ const router = new Router({
       }
     },
     {
-      path: '/24Hour',
+      path: '/24Hour/:id',
       name: '24Hour',
       component: TwentyFourHourProhibition,
       props: true
     },
     {
-      path: '/12Hour',
+      path: '/12Hour/:id',
       name: '12Hour',
       component: TwelveHourProhibition,
       props: true
     },
     {
-      path: '/IRP',
+      path: '/IRP/:id',
       name: 'IRP',
       component: ImmediateRoadsideProhibition,
       props: true
     },
     {
-      path: '/VI',
+      path: '/VI/:id',
       name: 'VI',
       component: VehicleImpoundment,
-      props: true
-    },
-    {
-      path: '/:form_type/:id/print',
-      name: 'print',
-      component: SVGPrint,
       props: true
     },
     {

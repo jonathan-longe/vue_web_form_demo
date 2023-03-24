@@ -41,7 +41,7 @@
     computed: {
       ...mapGetters(["getFormData", "getCurrentlyEditedForm"]),
       getPath() {
-        return `forms/${this.name}/data`
+        return `forms/${this.name}/${this.id}/data`
       },
       formObject() {
         return {
@@ -70,8 +70,7 @@
         type: String
       },
       id: {
-        type: String,
-        default: '1234'
+        type: String
       }}
   }
 </script>

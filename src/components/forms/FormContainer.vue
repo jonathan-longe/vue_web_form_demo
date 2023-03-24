@@ -19,31 +19,30 @@
   </div>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
+  import {mapMutations} from "vuex";
+
   export default {
     name: "FormContainer",
     computed: {
-      ...mapGetters([
-        'getCurrentlyEditedFormId',
-        'getFormIdCheckDigit'
-      ]),
       getDashedFormNumber() {
-        let dashedFormNumber = "";
-        for (let x = 0; x < this.getCurrentlyEditedFormId.length; x++) {
-          (x == 2) ? dashedFormNumber += "-" + this.getCurrentlyEditedFormId[x] : dashedFormNumber += this.getCurrentlyEditedFormId[x];
-        }
-        return dashedFormNumber;
+        return this.form_object.form_id;
       }
     },
+    methods: {
+      ...mapMutations(["editExistingForm"])
+    },
     props: {
-      form_object: Object,
+      form_object: {
+        form_id: '',
+        form_type: ''
+      },
       title: String
+    },
+    mounted() {
+      this.editExistingForm({
+        form_id: this.form_object.form_id,
+        form_type: this.form_object.form_type
+      })
     }
   }
 </script>
-<style scoped>
-  #check-digit {
-    background: lightgrey;
-    padding: 0 2px 0 2px;
-  }
-</style>

@@ -26,7 +26,11 @@ export const rsiStore = new Vuex.Store ({
     forms: {
       "IRP": {},
       "24Hour": {},
-      "12Hour": {},
+      "12Hour": {
+        "1234567": {
+          "id": "1234567"
+        }
+      },
       "VI": {}
     },
     form_schemas: {
@@ -123,10 +127,8 @@ export const rsiStore = new Vuex.Store ({
     vehicle_styles: [],
     version: version,
   },
-
   getters: getters,
   mutations: mutations,
   actions: actions,
   plugins: plugins
 })
-
