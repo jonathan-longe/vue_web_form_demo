@@ -5,13 +5,19 @@
       </div>
       <div class="card-body bg-light">
       <p class="card-text text-dark">{{ form.description }}</p>
-
-      <router-link class="text-white" :to="{ name: form.form_type }">
-          <button type="submit" class="btn btn-primary" :id="form.full_name">
+      <p class="card-text">
+        <small class="text-muted">
+          IDs available: {{ getFormTypeCount[form.form_type] }}
+        </small>
+      </p>
+        <button type="submit" class="btn btn-primary" :disabled="! isFormAvailable" :id="form.full_name">
+          <router-link class="text-white" v-if="isFormAvailable" :to="{
+            name: form.form_type,
+            params: { id: getNextAvailableUniqueIdByType(form.form_type)}}">
             New {{ form.label }} Form
-          </button>
-      </router-link>
-
+          </router-link>
+          <span v-if="! isFormAvailable">New {{ form.form_type }} Form</span>
+        </button>
     </div>
     </div>
 </template>

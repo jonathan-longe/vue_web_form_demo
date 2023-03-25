@@ -1,11 +1,8 @@
 <template>
   <div>
-<!--    <loading-resources v-if="!allResourcesLoaded"></loading-resources>-->
-<!--    <user-not-permitted-banner v-if="isDisplayUserNotAuthorizedBanner"></user-not-permitted-banner>-->
-<!--    <welcome-login-card v-if="isDisplayWelcomeLoginCard"></welcome-login-card>-->
     <issue-prohibitions></issue-prohibitions>
-    <recent-prohibitions v-if="false"></recent-prohibitions>
-    <feedback-welcome></feedback-welcome>
+    <recent-prohibitions v-if="isRecentProhibitions"></recent-prohibitions>
+    <feedback-welcome v-if="isDisplayFeedbackBanner"></feedback-welcome>
   </div>
 </template>
 <script>
@@ -22,12 +19,10 @@ export default {
   },
   computed: {
     ...mapGetters([
-      "allResourcesLoaded",
       "isUserHasAtLeastOneFormId",
       'getCurrentlyEditedFormObject',
       'getFormData',
       'isDisplayFeedbackBanner',
-      'isDisplayIssueProhibitions',
       'isDisplaySearchRecentProhibition',
       'isDisplayUserNotAuthorizedBanner',
       'isDisplayWelcomeLoginCard',

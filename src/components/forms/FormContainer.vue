@@ -37,12 +37,6 @@
         form_type: ''
       },
       title: String
-    },
-    mounted() {
-      this.editExistingForm({
-        form_id: this.form_object.form_id,
-        form_type: this.form_object.form_type
-      })
     }
   }
 </script>

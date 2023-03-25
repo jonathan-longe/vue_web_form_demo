@@ -431,10 +431,6 @@ export const getters = {
         return getters.isUserAuthenticated && getters.isUserAuthorized === false && state.keycloak.ready;
     },
 
-    isDisplayIssueProhibitions: (state, getters) => {
-        return getters.allResourcesLoaded && (getters.isUserAuthorized || getters.isAppAvailableToWorkOffline);
-    },
-
     isDisplayFeedbackBanner: (state, getters) => {
         return getters.isUserAuthorized;
     },
@@ -522,16 +518,5 @@ export const getters = {
         } else {
             return '';
         }
-    },
-
-    allResourcesLoaded: state => {
-        let status = true;
-        for (const key in state.loaded) {
-            if (!state.loaded[key]) {
-                status = false;
-            }
-        }
-        return status;
-    },
-
+    }
 };

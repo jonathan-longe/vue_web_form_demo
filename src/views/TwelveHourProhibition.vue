@@ -57,6 +57,10 @@ export default {
     // this.editExistingForm(payload)
     // this.setNewFormDefaults(payload)
     // this.data = this.getCurrentlyEditedFormData
+    this.editExistingForm({
+      form_id: this.id,
+      form_type: this.name
+    })
     this.isMounted = true
   },
   computed: {

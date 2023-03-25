@@ -7,7 +7,7 @@
             <a :href="`${publicPath}`" id="home"><img width="300px" :src="`${publicPath}assets/BCID_RoadSafetyBC_logo_transparent.png`" ></a>
             <div class="d-flex align-items-end flex-column">
               <div class="font-weight-bold text-warning">
-                PILOT &nbsp; <span class="text-light small" id="app-version">{{ getAppVersion }}</span>
+                DEMO &nbsp; <span class="text-light small" id="app-version">{{ getAppVersion }}</span>
               </div>
               <div class="mt-auto small">
                 <router-link to="/admin" v-if="isUserAnAdmin && isUserAnAdmin" class="btn btn-success text-white" id="admin">

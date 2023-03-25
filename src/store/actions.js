@@ -1,7 +1,7 @@
 import constants from "../config/constants";
 import persistence from "../helpers/persistence";
-import moment from "moment-timezone";
 import fuzzysort from 'fuzzysort'
+import { v4 as uuidv4 } from 'uuid';
 
 
 export const actions = {
@@ -33,7 +33,7 @@ export const actions = {
         }
     },
 
-    async getMoreFormsFromApiIfNecessary (context) {
+    getMoreFormsFromApiIfNecessary (context) {
         console.log("inside getMoreFormsFromApiIfNecessary()")
         context.getters.getArrayOfAllFormNames.forEach( form_type => {
             for (let i = 0; i < context.getters.getNumberOfUniqueIdsRequired(form_type); i++) {
@@ -52,45 +52,24 @@ export const actions = {
         })
     },
 
-    async getFormIdsFromApiByType (context, form_type) {
-        const url = constants.API_ROOT_URL + "/api/v1/forms/" + form_type
-        return await fetch(url, {
-            "method": "POST",
-            "headers": context.getters.apiHeader,
-            "credentials": "same-origin"})
-            .then(response => response.json())
-            .then(data => {
-                return {
-                    form_id: data.id,
-                    form_type: data.form_type,
-                    lease_expiry: data.lease_expiry,
-                    printed_timestamp: data.printed_timestamp
-                }
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
+    getFormIdsFromApiByType (context, form_type) {
+        // call API here to get form IDs; for demo purposes returning
+        // randomly regenerated form id
+        return {
+            form_id: uuidv4().slice(0,8),
+            form_type: form_type,
+            lease_expiry: new Date().toISOString(),
+            printed_timestamp: null
+        }
     },
 
-    async renewFormFromApiById (context, form_type, form_id) {
-        console.log("inside renewFormFromApiById()")
-        const url = constants.API_ROOT_URL + "/api/v1/forms/" + form_type + "/" + form_id
-        return await fetch(url, {
-            "method": "PATCH",
-            "headers": context.getters.apiHeader,
-            "credentials": "same-origin"})
-            .then(response => response.json())
-            .then(data => {
-                return {
-                    form_id: data.id,
-                    form_type: data.form_type,
-                    lease_expiry: data.lease_expiry,
-                    printed_timestamp: data.printed_timestamp
-                }
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
+    renewFormFromApiById (context, form_type, form_id) {
+        return {
+            form_id: form_id,
+            form_type: form_type,
+            lease_expiry: new Date().toISOString(),
+            printed_timestamp: null
+        }
     },
 
     async tellApiFormIsPrinted (context, payload) {
@@ -258,170 +237,6 @@ export const actions = {
         if (form_object_to_save) {
             await persistence.updateOrCreate(form_object.form_id, form_object_to_save)
         }
-    },
-
-
-    async applyToUnlockApplication(context, application) {
-        console.log("inside actions.js applyToUnlockApplication(): ")
-        const url = constants.API_ROOT_URL + "/api/v1/users"
-        return await new Promise((resolve, reject) => {
-            fetch(url, {
-                "method": 'POST',
-                "body": JSON.stringify(application),
-                "headers": context.getters.apiHeader,
-                    })
-                        .then(response => {
-                            return response
-                        })
-                        .then( (response) => {
-                            const data = response.json()
-                            if (response.status === 201) {
-                                console.log("applyToUnlockApplication() - success", data)
-                                resolve(data)
-                            } else {
-                                reject(data)
-                            }
-                        })
-                        .catch((error) => {
-                            console.log("error", error)
-                            if (error) {
-                                reject("message" in error ? {"description": error.message }: {"description": "No valid response"})
-                            }
-                            reject({"description": "Server did not respond"})
-                            });
-                    })
-    },
-
-    async adminApproveUserRole(context, new_user) {
-        console.log("inside actions.js adminApproveUserRole(): ")
-        const url = constants.API_ROOT_URL + "/api/v1/admin/users/" + new_user.user_guid + "/roles/officer"
-        return await new Promise((resolve, reject) => {
-            fetch(url, {
-            "method": 'PATCH',
-            "headers": context.getters.apiHeader,
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            return response.json()
-                        }
-                    })
-                    .then( data => {
-                        new_user.role_name = data.role_name
-                        new_user.approved_dt = data.approved_dt
-                        new_user.submitted_dt = data.submitted_dt
-                        resolve(context.commit("updateAdminUserRole", new_user))
-                    })
-                    .catch((error) => {
-                        console.log("error", error)
-                        if (error) {
-                            reject("message" in error ? {"description": error.message }: {"description": "No valid response"})
-                        }
-                        reject({"description": "Server did not respond"})
-                        });
-                })
-    },
-
-    async adminDeleteUserRole(context, payload) {
-        console.log("inside actions.js adminDeleteUserRole(): ", payload)
-        const url = constants.API_ROOT_URL + "/api/v1/admin/users/" + payload.user_guid + "/roles/" + payload.role_name
-        return await new Promise((resolve, reject) => {
-            fetch(url, {
-            "method": 'DELETE',
-            "headers": context.getters.apiHeader,
-                })
-                    .then(response => {
-                        console.log(response)
-                        if (response.status === 200) {
-                            resolve(context.commit("deleteAdminUserRole", payload))
-                        }
-                    })
-                    .catch(error => {
-                        console.log("error", error)
-                        if (error) {
-                            reject("message" in error ? {"description": error.message }: {"description": "No valid response"})
-                        }
-                        reject({"description": "Server did not respond"})
-                        });
-                })
-    },
-
-    async adminAddUserRole(context, new_user) {
-        console.log("inside actions.js adminAddUserRole()", new_user)
-        const url = constants.API_ROOT_URL + "/api/v1/admin/users/" + new_user.user_guid + "/roles"
-        const payload = {"role_name": "administrator"}
-        return await new Promise((resolve, reject) => {
-            fetch(url, {
-                "method": 'POST',
-                "body": JSON.stringify(payload),
-                "headers": context.getters.apiHeader,
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            return response.json()
-                        }
-                    })
-                    .then( () => {
-                        return resolve(context.commit("addAdminUserRole", {
-                            username: new_user.username,
-                            user_guid: new_user.user_guid,
-                            first_name: new_user.first_name,
-                            last_name: new_user.last_name,
-                            badge_number: new_user.badge_number,
-                            agency: new_user.agency,
-                            role_name: payload.role_name,
-                            approved_dt: moment().tz("America/Vancouver"),
-                            submitted_dt: moment().tz("America/Vancouver")
-                        }))
-                    })
-                    .catch((error) => {
-                        console.log("error", error)
-                        if (error) {
-                            return reject("message" in error ? {"description": error.message }: {"description": "No valid response"})
-                        }
-                        return reject({"description": "Server did not respond"})
-                        });
-                })
-    },
-
-    downloadLookupTables(context) {
-
-        context.dispatch("fetchStaticLookupTables", {"resource": "agencies", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "agencies")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "impound_lot_operators", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "impound_lot_operators")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "countries", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "countries")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "jurisdictions", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "jurisdictions")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "provinces", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "provinces")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "cities", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "cities")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "vehicles", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "vehicles")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "vehicle_styles", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "vehicle_styles")
-            })
-        context.dispatch("fetchStaticLookupTables", {"resource": "configuration", "admin": false, "static": true})
-            .then(() => {
-                context.commit("resourceLoaded", "configuration")
-            })
-
     },
 
     updateRichCheckBox (context, payload) {
