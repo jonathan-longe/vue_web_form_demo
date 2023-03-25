@@ -12,27 +12,6 @@ export const actions = {
         context.commit('stopEditingCurrentForm');
     },
 
-    async renewFormLeasesFromApiIfNecessary (context) {
-        console.log("inside renewFormLeasesFromApiIfNecessary()")
-        for( let form in context.getters.arrayOfFormsRequiringRenewal) {
-            let number_of_attempts = 0
-            while (number_of_attempts < constants.MAX_NUMBER_UNIQUE_ID_FETCH_ATTEMPTS) {
-                number_of_attempts++;
-                await context.dispatch("renewFormFromApiById", form.form_type, form.form_id)
-                    .then(data => {
-                        if (data) {
-                            context.commit("pushFormToStore", data)
-                            context.dispatch("saveCurrentFormToDB", data)
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log('Unable to renew form lease for ' + form.form_id)
-                        console.log(error)
-                    })
-           }
-        }
-    },
-
     getMoreFormsFromApiIfNecessary (context) {
         console.log("inside getMoreFormsFromApiIfNecessary()")
         context.getters.getArrayOfAllFormNames.forEach( form_type => {
@@ -63,44 +42,17 @@ export const actions = {
         }
     },
 
-    renewFormFromApiById (context, form_type, form_id) {
-        return {
-            form_id: form_id,
-            form_type: form_type,
-            lease_expiry: new Date().toISOString(),
-            printed_timestamp: null
-        }
-    },
-
-    async tellApiFormIsPrinted (context, payload) {
+    tellApiFormIsPrinted (context, payload) {
         console.log("inside tellApiFormIsPrinted()", payload)
-        const url = constants.API_ROOT_URL + "/api/v1/forms/" +
-            payload.form_type + "/" + payload.form_id
-        return await new Promise((resolve, reject) => {
-            fetch(url, {
-                "method": "PATCH",
-                "headers": context.getters.apiHeader,
-                "credentials": "same-origin",
-                body: JSON.stringify(context.state.forms[payload.form_type][payload.form_id])})
-                .then(response => response.json())
-                .then((data) => {
-                    resolve(data)
-                })
-                .catch(function (error) {
-                    console.log(error)
-                    reject({error: error})
-                });
-            }
-        )
     },
 
     // call to action that looks up the province code from the data that ICBC provides
     // if promise resolves successfully then mutate province field with jurisdiction object
     // if promise fails, do nothing
-    async lookupDriverProvince(context, [pathString, provinceCode]) {
+    lookupDriverProvince(context, [pathString, provinceCode]) {
         console.log("inside actions.js lookupDriverProvince(): ", pathString, provinceCode)
         const jurisdictionArray = context.state.jurisdictions.filter(o => o.objectCd === provinceCode)
-        return await new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             if (jurisdictionArray.length > 0) {
                 const event = {
                     "target": {
@@ -188,36 +140,6 @@ export const actions = {
                 })
     },
 
-    async fetchStaticLookupTables(context, payload) {
-        let url = ''
-        if (payload.admin) {
-            url = constants.API_ROOT_URL + "/api/v1/admin/" + payload.resource
-        } else if (payload.static) {
-            url = constants.API_ROOT_URL + "/api/v1/static/" + payload.resource
-        } else {
-            url = constants.API_ROOT_URL + "/api/v1/" + payload.resource
-        }
-        console.log("fetchStaticLookupTables()", url)
-        return await new Promise((resolve, reject) => {
-            fetch(url, {
-            "method": 'GET',
-            "headers": context.getters.apiHeader})
-            .then( response => {
-                return response.json()
-            })
-            .then( data => {
-                const admin_prefix = payload.admin ? 'admin_' : ''
-                context.commit("populateStaticLookupTables", { "type": admin_prefix + payload.resource, "data": data })
-                resolve(data)
-            })
-            .catch((error) => {
-                console.log("fetchStaticLookupTables network fetch failed")
-                reject(error)
-            })
-        })
-
-    },
-
     async deleteFormFromDB(context, form_id) {
         await persistence.del(form_id);
     },
@@ -293,20 +215,5 @@ export const actions = {
                 destination_attribute,
                 context.getters.getAttributeValue(form_path, source_attribute)])
         }
-    },
-
-    updateUserIsAuthenticated(context, payload) {
-        if (Array.isArray(payload)) {
-            for (const role of payload) {
-                if ('approved_dt' in role) {
-                    if (role.approved_dt) {
-                        context.commit("userIsAuthenticated", true)
-                    }
-                }
-            }
-        } else {
-            context.commit("userIsAuthenticated", false)
-        }
-
     }
 }

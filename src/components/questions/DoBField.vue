@@ -16,7 +16,7 @@
 </template>
 <script>
   import moment from 'moment';
-  import FieldCommon from "@/components/questions/FieldCommon";
+  import FieldCommon from "@/mixins/FieldCommon";
   import { mapGetters } from 'vuex';
   export default {
     name: "DoBField",

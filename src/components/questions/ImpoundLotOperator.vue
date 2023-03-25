@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-  import FieldCommon from "@/components/questions/FieldCommon";
+  import FieldCommon from "@/mixins/FieldCommon";
   import FormRow from "@/components/forms/FormRow";
   import ShadowBox from "@/components/forms/ShadowBox";
   import TextField from "@/components/questions/TextField";

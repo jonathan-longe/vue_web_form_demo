@@ -4,7 +4,6 @@ import {getters} from "@/store/getters";
 import {actions} from "@/store/actions"
 import {mutations} from "@/store/mutations";
 import {version} from "../../package.json";
-import {plugins} from "@/store/plugins";
 
 Vue.use(Vuex)
 
@@ -19312,6 +19311,5 @@ export const rsiStore = new Vuex.Store ({
   },
   getters: getters,
   mutations: mutations,
-  actions: actions,
-  plugins: plugins
+  actions: actions
 })

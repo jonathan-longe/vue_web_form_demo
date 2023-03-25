@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/views/Home'
-import Admin from "@/views/Admin";
-import Login from "@/views/Login";
 import TwentyFourHourProhibition from "@/views/TwentyFourHourProhibition";
+import SvgPrint from "@/views/SvgPrint.vue";
 import TwelveHourProhibition from "@/views/TwelveHourProhibition";
 import ImmediateRoadsideProhibition from "@/views/ImmediateRoadsideProhibition";
 import VehicleImpoundment from "@/views/VehicleImpoundment";
@@ -19,22 +18,6 @@ const router = new Router({
       path: '/',
       name: 'Home',
       component: Home
-    },
-    {
-      path: '/admin',
-      name: 'Admin',
-      component: Admin,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login,
-      meta: {
-        requiresAuth: true
-      }
     },
     {
       path: '/24Hour/:id',
@@ -58,6 +41,12 @@ const router = new Router({
       path: '/VI/:id',
       name: 'VI',
       component: VehicleImpoundment,
+      props: true
+    },
+    {
+      path: '/:form_type/:id/print',
+      name: 'print',
+      component: SvgPrint,
       props: true
     },
     {

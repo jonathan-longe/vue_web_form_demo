@@ -20,7 +20,7 @@
 // This TypeAhead Field will NOT update when the state changes
 // Do not use this component for fields that update from an ICBC query
 
-import FieldCommon from "@/components/questions/FieldCommon";
+import FieldCommon from "@/mixins/FieldCommon";
 import {mapGetters} from 'vuex';
 
 export default {

@@ -59,7 +59,7 @@
 
 <script>
 
-import FieldCommon from "@/components/questions/FieldCommon";
+import FieldCommon from "@/mixins/FieldCommon";
 import {mapGetters} from "vuex";
 import ColourSample from "@/components/questions/VehicleColour/ColourSample";
 

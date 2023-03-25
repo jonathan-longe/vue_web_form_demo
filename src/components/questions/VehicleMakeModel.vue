@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-  import FieldCommon from "@/components/questions/FieldCommon";
+  import FieldCommon from "@/mixins/FieldCommon";
   import { mapGetters } from "vuex";
   export default {
     name: "VehicleMakeModel",

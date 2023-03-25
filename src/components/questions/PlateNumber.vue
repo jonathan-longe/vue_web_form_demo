@@ -22,7 +22,7 @@
 </template>
 <script>
   import FadeText from "@/components/FadeText";
-  import FieldCommon from "@/components/questions/FieldCommon";
+  import FieldCommon from "@/mixins/FieldCommon";
   import { mapActions, mapGetters,  mapMutations} from "vuex";
   export default {
 

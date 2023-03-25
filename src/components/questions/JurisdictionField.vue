@@ -20,7 +20,7 @@
 
 <script>
 
-import FieldCommon from "@/components/questions/FieldCommon";
+import FieldCommon from "@/mixins/FieldCommon";
 import { mapGetters, mapMutations } from 'vuex';
 
 export default {

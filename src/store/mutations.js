@@ -27,10 +27,6 @@ export const mutations = {
     pathArray.push(event.target.id)
     nestedFunctions.deleteProp(state, pathArray)
   },
-  setFormAsImpounded (state) {
-    let form_object = state.currently_editing_form_object
-    Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "vehicle_impounded", "Yes");
-  },
   addItemToCheckboxList (state, payload) {
     let root = state.forms[payload.form_object.form_type][payload.form_object.form_id].data
     let tenant = {id: payload.event.id, value: payload.event.value}
@@ -47,8 +43,7 @@ export const mutations = {
     root[payload.id].splice(indexOfValue, 1)
   },
   deleteForm(state, payload) {
-    // TODO - add business logic to ensure user is permitted to delete a form
-    Vue.delete(state.forms[payload.form_type][payload.form_id], "data")
+    Vue.delete(state.forms[payload.form_type], payload.form_id)
   },
   stopEditingCurrentForm(state) {
     state.currently_editing_form_object.form_type = null;
@@ -67,9 +62,6 @@ export const mutations = {
         Vue.set(root, form_property, state.form_schemas.forms[form_object.form_type][form_property])
       }
     }
-  },
-  populateStaticLookupTables(state, payload) {
-    Vue.set(state, payload.type, payload.data)
   },
   populateDriverFromICBC(state, data) {
     let form_object = state.currently_editing_form_object
@@ -111,30 +103,11 @@ export const mutations = {
   pushFormToStore(state, form_object) {
     Vue.set(state.forms[form_object.form_type], form_object.form_id, form_object)
   },
-  setKeycloak(state, keycloak_object) {
-    Vue.set(state, "keycloak", keycloak_object)
-  },
   setFormAsPrinted(state, payload) {
     let root = state.forms[payload.form_object.form_type][payload.form_object.form_id]
     Vue.set(root, "printed_timestamp", payload.timestamp)
   },
-  updateAdminUserRole(state, p) {
-    const index = state.admin_users.findIndex( u => u.user_guid === p.user_guid && u.role_name === p.role_name)
-    Vue.set(state.admin_users, index, p)
-  },
-  deleteAdminUserRole(state, p) {
-    const index = state.admin_users.findIndex( u => u.user_guid === p.user_guid && u.role_name === p.role_name)
-    Vue.delete(state.admin_users, index)
-  },
-  addAdminUserRole(state, payload) {
-    state.admin_users.push(payload)
-  },
-  networkIsOnline(state) {
-    Vue.set(state, "isOnline", true)
-  },
-  networkIsOffline(state) {
-    Vue.set(state, "isOnline", false)
-  },
+
   populateDriverFromBarCode(state, data) {
     let form_object = state.currently_editing_form_object
     Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "drivers_number", data['number']);
@@ -144,11 +117,5 @@ export const mutations = {
     Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "dob", data['dob']);
     Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "first_name", data['name']['given']);
     Vue.set(state.forms[form_object.form_type][form_object.form_id].data, "last_name", data['name']['surname']);
-  },
-  userIsAuthenticated(state, boolean_payload) {
-    Vue.set(state, "isUserAuthorized", boolean_payload)
-  },
-  resourceLoaded(state, resource) {
-    Vue.set(state.loaded, resource, true)
   }
 }

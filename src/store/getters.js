@@ -49,10 +49,6 @@ export const getters = {
         return state.forms[form_type][form_id].data;
     },
 
-    getForm: state => (form_type, form_id) => {
-        return state.forms[form_type][form_id];
-    },
-
     getCurrentlyEditedFormData: state => {
         let form_object = state.currently_editing_form_object;
         let root = state.forms[form_object.form_type][form_object.form_id];
@@ -153,11 +149,6 @@ export const getters = {
         return last_name + "_" + form_id + "_" + document_type + file_extension;
     },
 
-    getPDFTemplateFileName: state => document_type => {
-        let form_object = state.currently_editing_form_object;
-        return state.form_schemas.forms[form_object.form_type].documents[document_type].pdf;
-    },
-
     getDocumentsToPrint: state => form_type => {
         return state.form_schemas.forms[form_type].documents;
     },
@@ -172,18 +163,6 @@ export const getters = {
 
     getArrayOfProvinces: state => {
         return state.provinces;
-    },
-
-    getArrayOfProvinceNames: state => {
-        return state.provinces.map(o => o.objectDsc);
-    },
-
-    getProvinceObjectByName: state => name => {
-        const results = state.provinces.filter(o => o.objectDsc === name);
-        if (results.length > 0) {
-            return results[0];
-        }
-        return {};
     },
 
     getImpoundLotOperatorObject: state => ilo_string => {
@@ -302,83 +281,6 @@ export const getters = {
         return '';
     },
 
-    getAgencyName: state => {
-        if (state.keycloak) {
-            if (state.keycloak.idTokenParsed) {
-                if (state.keycloak.idTokenParsed.bceid_business_name) {
-                    return state.keycloak.idTokenParsed.bceid_business_name;
-                }
-            }
-        }
-        return '';
-    },
-
-    getFormPrintValue: state => (form_object, attribute) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(attribute in root)) {
-            return '';
-        }
-        return root[attribute].toUpperCase();
-    },
-
-    getFormPrintListValues: state => (form_object, attribute) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(attribute in root)) {
-            return '';
-        }
-        return root[attribute].join(" and ").toUpperCase();
-    },
-
-    getFormDateTimeString: state => (form_object, [dateString, timeString]) => {
-        const root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(dateString in root && timeString in root)) {
-            return '';
-        }
-        const date_time = moment.tz(root[dateString] + " " + root[timeString], 'YYYYMMDD HHmm', true, constants.TIMEZONE);
-        return date_time.format("YYYY-MM-DD HH:mm");
-    },
-
-    getFormPrintDate: state => (form_object, dateString) => {
-        const root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(dateString in root)) {
-            return '';
-        }
-        const date_time = moment(root[dateString], 'YYYYMMDD', true);
-        return date_time.format("YYYY-MM-DD");
-    },
-
-    getFormDateTime: state => (form_object, [dateString, timeString]) => {
-        const root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(dateString in root && timeString in root)) {
-            return '';
-        }
-        return moment.tz(root[dateString] + " " + root[timeString], 'YYYYMMDD HHmm', true, constants.TIMEZONE);
-    },
-    getFormPrintRadioValue: state => (form_object, attribute, checked_value) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(attribute in root)) {
-            return false;
-        }
-        return root[attribute] === checked_value;
-    },
-
-    getFormPrintCheckedValue: state => (form_object, attribute, checked_value) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(attribute in root)) {
-            return '';
-        }
-        return root[attribute].includes(checked_value);
-    },
-
-    getFormPrintJurisdiction: state => (form_object, attribute) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!(attribute in root)) {
-            return '';
-        }
-        let filteredObject = state.jurisdictions.filter(j => j === root[attribute]);
-        return filteredObject[0]['objectCd'].toUpperCase();
-    },
-
     isUserAnAdmin: state => {
         if (Array.isArray(state.user_roles)) {
             for (const role of state.user_roles) {
@@ -445,62 +347,6 @@ export const getters = {
 
     isDisplayWelcomeLoginCard: (state, getters) => {
         return !getters.isAppAvailableToWorkOffline && !getters.isUserAuthenticated && state.keycloak.ready;
-    },
-
-    isTestAdministeredADSE: (state, getters) => (path) => {
-        const root = getters.getAttributeValue(path, 'test_administered_adse');
-        if (Array.isArray(root)) {
-            return root.includes("Approved Drug Screening Equipment");
-        }
-        return false;
-    },
-    isTestAdministeredSFST: (state, getters) => (path) => {
-        const root = getters.getAttributeValue(path, 'test_administered_sfst');
-        if (Array.isArray(root)) {
-            return root.includes("Prescribed Physical Coordination Test (SFST)");
-        }
-        return false;
-    },
-    isTestAdministeredDRE: (state, getters) => (path) => {
-        const root = getters.getAttributeValue(path, 'test_administered_dre');
-        if (Array.isArray(root)) {
-            return root.includes("Prescribed Physical Coordination Test (DRE)");
-        }
-        return false;
-    },
-
-    isTestAdministeredASD: (state, getters) => (path) => {
-        const root = getters.getAttributeValue(path, 'test_administered_asd');
-        if (Array.isArray(root)) {
-            return root.includes("Alco-Sensor FST (ASD)");
-        }
-        return false;
-    },
-    isTestAdministeredApprovedInstrument: (state, getters) => (path) => {
-        const root = getters.getAttributeValue(path, 'test_administered_instrument');
-        if (Array.isArray(root)) {
-            return root.includes("Approved Instrument");
-        }
-        return false;
-    },
-
-    locationOfVehicle: state => (form_object) => {
-        let root = state.forms[form_object.form_type][form_object.form_id].data;
-        if (!("vehicle_impounded" in root)) {
-            return '';
-        }
-        if (root["vehicle_impounded"] === 'Yes') {
-            if (form_object.form_type === '24Hour') {
-                return "IMPOUNDED";
-            }
-            return '';
-        }
-        if (root["vehicle_impounded"] === 'No') {
-            if ("reason_for_not_impounding" in root) {
-                return root['reason_for_not_impounding'].toUpperCase();
-            }
-            return '';
-        }
     },
 
     getCurrentUserObject: state => {

@@ -17,7 +17,7 @@
 
 <script>
 
-import FieldCommon from "@/components/questions/FieldCommon";
+import FieldCommon from "@/mixins/FieldCommon";
 
 export default {
   name: "GenderField",
